@@ -47,6 +47,7 @@
       }
       .option {
         margin-bottom: 0.25rem;
+        display: block;
       }
       .result {
         margin-top: 1rem;
@@ -58,8 +59,14 @@
         margin-top: 1.5rem;
         padding: 1rem;
         border-radius: 6px;
+      }
+      .summary-pass {
         background: #f0fdf4;
         border: 1px solid #86efac;
+      }
+      .summary-fail {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
       }
       .incorrect {
         color: #b91c1c;
@@ -87,10 +94,7 @@
   <body>
     <div class="container">
       <h1>Simulador de Tests</h1>
-      <p class="small">
-        Banco de preguntas cargado desde <code>preguntas.json</code>. Elige un
-        módulo y realiza un test de hasta 30 preguntas tipo test.
-      </p>
+   
 
       <div id="config">
         <div>
@@ -280,20 +284,19 @@
       function terminarExamen() {
         document.getElementById("examen").classList.add("hidden");
         const resumenDiv = document.getElementById("resumen");
-        resumenDiv.classList.remove("hidden");
+        resumenDiv.classList.remove("hidden", "summary-pass", "summary-fail");
 
         const total = preguntasSeleccionadas.length;
         const nota = (aciertos / total) * 10;
-        const haAprobadoOficial =
-          total >= 30 && aciertos >= 18 ? "Sí" : "No (criterio oficial 18/30)";
-        const haAprobado60 = aciertos >= total * 0.6 ? "Sí" : "No";
+        const haAprobado60 = aciertos >= total * 0.6;
+
+        resumenDiv.classList.add(haAprobado60 ? "summary-pass" : "summary-fail");
 
         resumenDiv.innerHTML = `
           <h2>Resultados</h2>
           <p>Aciertos: <strong>${aciertos}</strong> de <strong>${total}</strong></p>
           <p>Nota aproximada (sobre 10): <strong>${nota.toFixed(2)}</strong></p>
-          <p>¿Aprueba según criterio oficial (18/30)? <strong>${haAprobadoOficial}</strong></p>
-          <p>¿Aprueba con criterio 60% aciertos? <strong>${haAprobado60}</strong></p>
+          <p>¿Aprueba con criterio 60% aciertos? <strong>${haAprobado60 ? "Sí" : "No"}</strong></p>
           <button id="btnRepetir">Volver a empezar</button>
         `;
 
@@ -310,4 +313,3 @@
     </script>
   </body>
   </html>
-
